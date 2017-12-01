@@ -9,6 +9,8 @@ import { AgmCoreModule } from '@agm/core';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Camera } from '@ionic-native/camera';
 
+import { PlacesService } from '../services/places';
+
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AddPlacePage } from '../pages/add-place/add-place';
@@ -35,6 +37,7 @@ import { SetLocationPage } from '../pages/set-location/set-location';
     providers: [
         Geolocation,
         Camera,
+        PlacesService,
         StatusBar,
         SplashScreen,
         { provide: ErrorHandler, useClass: IonicErrorHandler }
