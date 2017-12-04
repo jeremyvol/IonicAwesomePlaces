@@ -1,13 +1,16 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { IonicStorageModule } from '@ionic/storage';
+
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-
-import { AgmCoreModule } from '@agm/core';
-
 import { Geolocation } from '@ionic-native/geolocation';
 import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
+
+import { AgmCoreModule } from '@agm/core';
 
 import { PlacesService } from '../services/places';
 
@@ -22,6 +25,7 @@ import { SetLocationPage } from '../pages/set-location/set-location';
     imports: [
         BrowserModule,
         IonicModule.forRoot(MyApp),
+        IonicStorageModule.forRoot(),
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyB4BuxXgtUV3TOgn_Iip07jG3hMDa5yCqA'
         })
@@ -37,6 +41,7 @@ import { SetLocationPage } from '../pages/set-location/set-location';
     providers: [
         Geolocation,
         Camera,
+        File,
         PlacesService,
         StatusBar,
         SplashScreen,

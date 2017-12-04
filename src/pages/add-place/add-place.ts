@@ -10,9 +10,12 @@ import { Location } from '../../models/location';
 
 import { Geolocation } from '@ionic-native/geolocation';
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { File, Entry, FileError } from '@ionic-native/file';
 
 import { SetLocationPage } from '../set-location/set-location';
 import { PlacesService } from '../../services/places';
+
+declare var cordova: any;
 
 @Component({
     selector: 'page-add-place',
@@ -32,7 +35,8 @@ export class AddPlacePage {
         private toastCtrl: ToastController,
         private placesService: PlacesService,
         private geolocation: Geolocation,
-        private camera: Camera
+        private camera: Camera,
+        private file: File
     ) {}
 
     onSubmit(form: NgForm) {
@@ -98,10 +102,38 @@ export class AddPlacePage {
         };
         this.camera.getPicture(options).then(
             imageData => {
+                const currentName = imageData.replace(/^.*[\\\/]/, '');
+                const path = imageData.replace(/[^\/]*$/, '');
+                const newFileName = new Date().getUTCMilliseconds() + '.jpg';
+                this.file
+                    .moveFile(
+                        path,
+                        currentName,
+                        cordova.file.dataDirectory,
+                        newFileName
+                    )
+                    .then((data: Entry) => {
+                        this.imageUrl = data.nativeURL;
+                        this.camera.cleanup();
+                    })
+                    .catch((err: FileError) => {
+                        this.imageUrl = '';
+                        const toast = this.toastCtrl.create({
+                            message:
+                                'Could not save the image. Pleae try again.',
+                            duration: 2500
+                        });
+                        toast.present();
+                        this.camera.cleanup();
+                    });
                 this.imageUrl = imageData;
             },
             err => {
-                console.log(err);
+                const toast = this.toastCtrl.create({
+                    message: 'Could not take the image. Pleae try again.',
+                    duration: 2500
+                });
+                toast.present();
             }
         );
     }
